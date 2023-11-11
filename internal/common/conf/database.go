@@ -75,7 +75,7 @@ var (
 
 // ConnectDB establece la conexión a la base de datos MongoDB
 func ConnectDB(env *Env) error {
-	
+
 	dbHost := env.DBHost
 	dbUser := env.DBUser
 	dbPass := env.DBPass

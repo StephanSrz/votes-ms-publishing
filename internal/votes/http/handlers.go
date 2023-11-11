@@ -1,32 +1,43 @@
 package http
 
 import (
-	"context"
+	"fmt"
 	"net/http"
 
-	conf "example.com/module/internal/common/conf"
 	dtos "example.com/module/internal/votes/http/dto"
+	services "example.com/module/internal/votes/services"
 	"github.com/gin-gonic/gin"
 )
 
-func CreateVote(c *gin.Context) {
-	var vote dtos.VotesRequestDTO
-	if err := c.ShouldBindJSON(&vote); err != nil {
+type voteHandler struct {
+	vs services.VoteService
+}
+
+type VoteHandler interface {
+	CreateVote(c *gin.Context)
+}
+
+func NewVoteHandler(voteService services.VoteService) VoteHandler {
+	return &voteHandler{
+		vs: voteService,
+	}
+}
+
+func (vh *voteHandler) CreateVote(c *gin.Context) {
+	var voteDto dtos.VotesRequestDTO
+	if err := c.ShouldBindJSON(&voteDto); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Conectarse a MongoDB
-	client := conf.MongoClient
-	collection := client.Database("plannig-poker").Collection("votes")
+	fmt.Println("---------------DTO----------------")
+	fmt.Println(voteDto)
 
-	ctx := context.TODO()
-	_, err := collection.InsertOne(ctx, vote)
+	voteEntity := voteDto.MapToVoteEntity()
+	err := vh.vs.SaveVote(&voteEntity)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
+		c.JSON(http.StatusBadRequest, gin.H{"message": err})
 	}
-
 	c.JSON(http.StatusCreated, gin.H{"message": "Vote created"})
 }
 

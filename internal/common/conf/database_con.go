@@ -10,7 +10,7 @@ import (
 var MongoClient *mongo.Client
 
 func ConnectToMongoDB() error {
-	mongoURI := "" // MONGO DB ATLAS URL
+	mongoURI := "mongodb+srv://<userName>:<pass>@atlascluster.sexp42w.mongodb.net/" // MONGO DB ATLAS URL
 	client, err := mongo.NewClient(options.Client().ApplyURI(mongoURI))
 	if err != nil {
 		return err
