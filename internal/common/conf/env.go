@@ -10,6 +10,7 @@ import (
 type Env struct {
 	AppEnv         string `mapstructure:"APP_ENV"`
 	ServerAddress  string `mapstructure:"SERVER_ADDRESS"`
+	PortServer     string `mapstructure:"PORT_SERVER"`
 	ContextTimeout int    `mapstructure:"CONTEXT_TIMEOUT"`
 	DBHost         string `mapstructure:"DB_HOST"`
 	DBPort         string `mapstructure:"DB_PORT"`
@@ -18,13 +19,13 @@ type Env struct {
 	DBCluster      string `mapstructure:"DB_CLUSTER"`
 	DBName         string `mapstructure:"DB_NAME"`
 	// AccessTokenScecret
+	PublishDataUrl string `mapstructure:"PUBLISH_DATA_URL"`
 }
 
-func NewEnv(configFilePath string) *Env {
+func NewEnv() *Env {
 	env := Env{}
 
-	// Configurar la ruta del archivo de configuración
-	viper.SetConfigFile(configFilePath)
+	viper.SetConfigFile(".env.yaml")
 
 	err := viper.ReadInConfig()
 	if err != nil {
