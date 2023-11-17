@@ -6,20 +6,24 @@ import (
 	"fmt"
 	"net/http"
 
-	conf "example.com/module/internal/common/conf"
 	entity "example.com/module/internal/votes/entity"
 	models "example.com/module/internal/votes/repository/mongo/models"
 	"github.com/spf13/viper"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type voteRepository struct{}
+type voteRepository struct {
+	db *mongo.Database
+}
 
 type VoteRepository interface {
 	SaveVote(vote *entity.Votes) (*entity.Votes, error)
 }
 
-func NewVoteRepository() VoteRepository {
-	return &voteRepository{}
+func NewVoteRepository(dbClient *mongo.Database) VoteRepository {
+	return &voteRepository{
+		db: dbClient,
+	}
 }
 
 func (vr *voteRepository) SaveVote(vote *entity.Votes) (*entity.Votes, error) {
@@ -28,14 +32,15 @@ func (vr *voteRepository) SaveVote(vote *entity.Votes) (*entity.Votes, error) {
 	voteModel.MapFromEntity(vote)
 
 	// Connecting to mongo
-	client := conf.MongoClient
-	collection := client.Database("planning-poker").Collection("votes")
+	collection := vr.db.Collection("votes_test")
 
 	ctx := context.TODO()
+	fmt.Println("Insertando en la base de datos...")
 	_, err := collection.InsertOne(ctx, voteModel)
 	if err != nil {
 		return nil, err
 	}
+	fmt.Println("Inserción exitosa.")
 
 	err = publishData(voteModel.UserId, voteModel.RoomId)
 	if err != nil {

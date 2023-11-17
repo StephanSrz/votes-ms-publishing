@@ -21,11 +21,7 @@ func NewApp() *App {
 
 	app.Env = conf.NewEnv()
 
-	err := conf.ConnectToMongoDB(app.Env.DBHost, app.Env.DBUser, app.Env.DBPass, app.Env.DBCluster)
-	if err != nil {
-		panic(err)
-	}
-	app.Deps = votesHttp.NewAppDependencies()
+	app.Deps = votesHttp.NewAppDependencies(app.Env)
 
 	app.Router = gin.Default()
 
