@@ -33,23 +33,17 @@ func (vr *voteRepository) SaveVote(vote *entity.Votes) (*entity.Votes, error) {
 
 	// Connecting to mongo
 	collection := vr.db.Collection("votes_test")
-
 	ctx := context.TODO()
-	fmt.Println("Insertando en la base de datos...")
 	_, err := collection.InsertOne(ctx, voteModel)
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println("Inserción exitosa.")
-
 	err = publishData(voteModel.UserId, voteModel.RoomId)
 	if err != nil {
 		panic(err)
 	}
 
 	voteEntity := voteModel.MapToEntity()
-	fmt.Println("---------------REPOSITORY----------------")
-	fmt.Println(voteEntity)
 	return voteEntity, nil
 }
 

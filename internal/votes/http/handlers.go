@@ -1,7 +1,6 @@
 package http
 
 import (
-	"fmt"
 	"net/http"
 
 	dtos "example.com/module/internal/votes/http/dto"
@@ -29,9 +28,6 @@ func (vh *voteHandler) CreateVote(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	fmt.Println("---------------DTO----------------")
-	fmt.Println(voteDto)
 
 	voteEntity := voteDto.MapToVoteEntity()
 	err := vh.vs.SaveVote(&voteEntity)

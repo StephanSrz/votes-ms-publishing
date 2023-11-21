@@ -5,15 +5,14 @@ import (
 	"log"
 
 	conf "example.com/module/internal/common/conf"
-	exampleHttp "example.com/module/internal/example_hello_domain/http"
 	votesHttp "example.com/module/internal/votes/http"
 	"github.com/gin-gonic/gin"
 )
 
 type App struct {
-	Router *gin.Engine
-	Deps   *votesHttp.AppDependencies
-	Env    *conf.Env
+	Router            *gin.Engine
+	VotesDependencies *votesHttp.AppDependencies
+	Env               *conf.Env
 }
 
 func NewApp() *App {
@@ -21,12 +20,11 @@ func NewApp() *App {
 
 	app.Env = conf.NewEnv()
 
-	app.Deps = votesHttp.NewAppDependencies(app.Env)
+	app.VotesDependencies = votesHttp.NewAppDependencies(app.Env)
 
 	app.Router = gin.Default()
 
-	exampleHttp.Routes(app.Router)
-	votesHttp.Routes(app.Router, app.Deps)
+	votesHttp.Routes(app.Router, app.VotesDependencies)
 
 	return app
 }

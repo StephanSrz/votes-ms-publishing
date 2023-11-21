@@ -12,7 +12,6 @@ var MongoClient *mongo.Client
 
 func ConnectToMongoDB(databaseData ...string) (*mongo.Database, error) {
 
-	fmt.Println(databaseData)
 	dbHost := databaseData[0]
 	dbUser := databaseData[1]
 	dbName := databaseData[2]

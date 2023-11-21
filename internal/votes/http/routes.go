@@ -5,7 +5,7 @@ import (
 )
 
 func Routes(router *gin.Engine, deps *AppDependencies) {
-	routesVotes := router.Group("/votes")
+	routesVotes := router.Group("/v1/votes")
 	routesVotes.GET("/", GetVotes)
 	routesVotes.POST("/", deps.VoteHandler.CreateVote)
 }

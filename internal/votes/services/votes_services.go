@@ -1,8 +1,6 @@
 package services
 
 import (
-	"fmt"
-
 	entity "example.com/module/internal/votes/entity"
 	repository "example.com/module/internal/votes/repository/mongo"
 )
@@ -22,9 +20,6 @@ func NewVoteService(repo repository.VoteRepository) VoteService {
 }
 
 func (vs *voteService) SaveVote(entityVote *entity.Votes) error {
-
-	fmt.Println("---------------SERVICE----------------")
-	fmt.Println(entityVote)
 	_, err := vs.repo.SaveVote(entityVote)
 	if err != nil {
 		return err
