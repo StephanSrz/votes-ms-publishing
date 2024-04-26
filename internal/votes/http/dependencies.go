@@ -1,9 +1,9 @@
 package http
 
 import (
-	conf "example.com/module/internal/common/conf"
 	repository "example.com/module/internal/votes/repository/mongo"
 	services "example.com/module/internal/votes/services"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type AppDependencies struct {
@@ -12,9 +12,9 @@ type AppDependencies struct {
 	VoteHandler VoteHandler
 }
 
-func NewAppDependencies(envVar *conf.Env) *AppDependencies {
-	dbClient, _ := conf.ConnectToMongoDB(envVar.DBHost, envVar.DBUser, envVar.DBName, envVar.DBPass, envVar.DBCluster)
-	voteRepo := repository.NewVoteRepository(dbClient)
+func NewAppDependencies(dbInstanceConn *mongo.Database) *AppDependencies {
+	dbInstance := dbInstanceConn
+	voteRepo := repository.NewVoteRepository(dbInstance)
 	voteService := services.NewVoteService(voteRepo)
 	voteHandler := NewVoteHandler(voteService)
 

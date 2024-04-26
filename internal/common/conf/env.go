@@ -1,45 +1,38 @@
 package conf
 
 import (
-	// "fmt"
 	"log"
+	"os"
 
-	"github.com/spf13/viper"
+	"github.com/joho/godotenv"
 )
 
 type Env struct {
-	AppEnv         string `mapstructure:"APP_ENV"`
-	ServerAddress  string `mapstructure:"SERVER_ADDRESS"`
-	PortServer     string `mapstructure:"PORT_SERVER"`
-	ContextTimeout int    `mapstructure:"CONTEXT_TIMEOUT"`
-	DBHost         string `mapstructure:"DB_HOST"`
-	DBPort         string `mapstructure:"DB_PORT"`
-	DBUser         string `mapstructure:"DB_USER"`
-	DBPass         string `mapstructure:"DB_PASS"`
-	DBCluster      string `mapstructure:"DB_CLUSTER"`
-	DBName         string `mapstructure:"DB_NAME"`
-	// AccessTokenScecret
-	PublishDataUrl string `mapstructure:"PUBLISH_DATA_URL"`
+	ServerAddress string
+	PortAddress   string
+	MongoServer   string
+	MongoUsername string
+	MongoPassword string
+	MongoCluster  string
+	DbName        string
+	DbEnviroment  string
 }
 
 func NewEnv() *Env {
 	env := Env{}
 
-	viper.SetConfigFile(".env.yaml")
-
-	err := viper.ReadInConfig()
-	if err != nil {
-		log.Fatal("Can't find the file .env.yaml: ", err)
+	if err := godotenv.Load(); err != nil {
+		log.Fatal("Error loading .env file", err)
 	}
 
-	err = viper.Unmarshal(&env)
-	if err != nil {
-		log.Fatal("Enviroment can't be loaded: ", err)
-	}
-
-	if env.AppEnv == "development" {
-		log.Println("The app is running in development env")
-	}
+	env.ServerAddress = os.Getenv("SERVER_ADDRESS")
+	env.PortAddress = os.Getenv("PORT_SERVER")
+	env.MongoServer = os.Getenv("MONGO_SERVER")
+	env.MongoUsername = os.Getenv("MONGO_USERNAME")
+	env.MongoPassword = os.Getenv("MONGO_PASSWORD")
+	env.MongoCluster = os.Getenv("MONGO_CLUSTER")
+	env.DbName = os.Getenv("DB_NAME")
+	env.DbEnviroment = os.Getenv("DB_ENVIROMENT")
 
 	return &env
 }

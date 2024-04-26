@@ -36,7 +36,3 @@ func (vh *voteHandler) CreateVote(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, gin.H{"message": "Vote created"})
 }
-
-func GetVotes(c *gin.Context) {
-
-}

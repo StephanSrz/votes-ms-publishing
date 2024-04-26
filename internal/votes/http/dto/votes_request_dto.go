@@ -5,10 +5,10 @@ import (
 )
 
 type VotesRequestDTO struct {
-	UserId    string `json:"UserId" validate:"required"`
-	RoomId    string `json:"RoomId" validate:"required"`
-	UserStory string `json:"UserStory" validated:"omitempty"`
-	Value     string `json:"Value" validate:"required"`
+	UserId    string `json:"userId" validate:"required"`
+	RoomId    string `json:"roomId" validate:"required"`
+	UserStory string `json:"userStory" validated:"omitempty"`
+	Value     string `json:"value" validate:"required"`
 }
 
 func (dto *VotesRequestDTO) MapToVoteEntity() entity.Votes {
